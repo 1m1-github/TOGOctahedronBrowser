@@ -1,10 +1,11 @@
 name = "TOGOctahedronBrowser"
 uuid = "d9ade570-c399-443a-9f78-256c8ef4baba"
-version = "1.0.0"
+version = "2.0.0"
 authors = ["1m1 <imi@1m1.io>"]
 
 [deps]
 TOGBroadcastBrowser = "cb78168c-aa21-4c29-bdc5-51c3172deeca"
 TOGOctahedron = "63dbb591-2283-4878-9590-a413da56821f"
 LoopOS = "9a85759a-e2d6-4eb5-ba00-7f48a432d541"
+TOG = "894673ee-413c-4601-8a2e-415a0e884e29"
 TOGZMQClient = "c1d2c9e1-0543-4184-a1aa-e46b4235aa2f"
