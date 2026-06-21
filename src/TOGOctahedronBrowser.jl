@@ -9,8 +9,6 @@ using TOG: ○
 using TOGColor: scalar2rgba
 using LoopOS: @whiletrue
 
-const T = TOGZMQClient.T()
-
 awaken(;octahedron, browser) = BROWSER[] = Browser(
     octahedron,
     browserlooptask(octahedron, browser),
