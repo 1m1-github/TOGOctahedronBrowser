@@ -1,6 +1,6 @@
 name = "TOGOctahedronBrowser"
 uuid = "d9ade570-c399-443a-9f78-256c8ef4baba"
-version = "4.0.0"
+version = "5.0.0"
 authors = ["1m1 <imi@1m1.io>"]
 
 [deps]

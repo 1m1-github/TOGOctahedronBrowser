@@ -9,45 +9,45 @@ using TOG: ○
 using TOGColor: scalar2rgba
 using LoopOS: @whiletrue
 
-awaken(;octahedron, browser) = BROWSER[] = Browser(
+awaken(; octahedron, browser) = BROWSER[] = Browser(
     octahedron,
     browserlooptask(octahedron, browser),
     browser)
-    
-    # todo white thin outline in browser
-    mutable struct Browser
-        o::Octahedron
-        loop::Union{Task,Nothing}
-        browser::Union{BroadcastBrowser,Nothing}
-    end
+mutable struct Browser
+    o::Octahedron
+    loop::Union{Task,Nothing}
+    browser::Union{BroadcastBrowser,Nothing}
+end
 const BROWSER = Ref{Browser}()
 browserlooptask(o, browser) = errormonitor(Threads.@spawn begin
     # t = time()
-    put!(browser.processor, JS(o.♯[1], o.♯[2]))
-    ϕ = fill(○(first(typeof(o).parameters)), o.♯[1], o.♯[2])
-    @whiletrue begin
-        # try
-            # t̃ = time()
-            # dt = t̃ - t
-            # t = t̃
-            # step!(o)
-            sleep(1) # DEBUG
-            ϕ̇ = Base.invokelatest() do
-                observe(o)
-                # ∃̇(o, ω)
-            end
-            # unique(ϕ̇)
-            δ = Δ!(ϕ, ϕ̇)
-            isempty(δ) && continue
-            js = "pixel=" * writeδ(δ, o.♯[2]) * "\n" * SET_PIXELS_JS
-            @show "length(js)", length(js)
-            put!(browser.processor, js)
-        # catch e
-        #     bt = catch_backtrace()
-        #     showerror(stderr, e, bt)
-        #     sleep(1)
-        # end
-    end
+    # put!(BroadcastBrowser, JS(o.♯[1], o.♯[2]))
+    # # put!(browser.processor, JS(o.♯[1], o.♯[2]))
+    # ϕ = fill(○(first(typeof(o).parameters)), o.♯[1], o.♯[2]), ones(first(typeof(o).parameters), o.♯[1], o.♯[2])
+    # @whiletrue begin
+    #     #     # try
+    #     #         # t̃ = time()
+    #     #         # dt = t̃ - t
+    #     #         # t = t̃
+    #     #         # step!(o)
+    #     sleep(10) # DEBUG
+    #     ϕ̇ = Base.invokelatest() do
+    #         y = observe(o)
+    #         @show "browserlooptask", y
+    #         # ∃̇(o, ω)
+    #     end
+    #     #         # unique(ϕ̇)
+    #     δ = Δ!(ϕ, ϕ̇)
+    #     isempty(δ) && continue
+    #     js = "pixel=" * writeδ(δ, o.♯[2]) * "\n" * SET_PIXELS_JS
+    #     @show "length(js)", length(js)
+    #     put!(browser.processor, js)
+    #     #     # catch e
+    #     #     #     bt = catch_backtrace()
+    #     #     #     showerror(stderr, e, bt)
+    #     #     #     sleep(1)
+    #     #     # end
+    # end
 end)
 
 # const invϕ = one(T) / MathConstants.golden
@@ -72,11 +72,13 @@ end)
 #     nothing, nothing
 # ))
 function Δ!(ϕ, ϕ̇)
-    δ = Tuple{CartesianIndex{2},Tuple{eltype(ϕ),eltype(ϕ),eltype(ϕ),eltype(ϕ)}}[]
-    for i = CartesianIndices(ϕ̇)
-        ϕ[i] == ϕ̇[i] && continue
-        ϕ[i] = ϕ̇[i]
-        push!(δ, (i, scalar2rgba(ϕ̇[i])))
+    δ = Tuple{CartesianIndex{2},Tuple{eltype(ϕ[1]),eltype(ϕ[1]),eltype(ϕ[1]),eltype(ϕ[1])}}[]
+    for i = CartesianIndices(ϕ̇[1])
+        ϕ[1][i] == ϕ̇[1][i] && ϕ[2][i] == ϕ̇[2][i] && continue
+        ϕ[1][i] = ϕ̇[1][i]
+        ϕ[2][i] = ϕ̇[2][i]
+        rgba = scalar2rgba(ϕ̇[1][i], ϕ̇[2][i])
+        push!(δ, (i, eltype(ϕ[1])(rgba.r), eltype(ϕ[1])(rgba.g), eltype(ϕ[1])(rgba.b), eltype(ϕ[1])(rgba.alpha)))
     end
     δ
 end
