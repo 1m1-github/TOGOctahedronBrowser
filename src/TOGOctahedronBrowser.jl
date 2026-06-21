@@ -1,12 +1,15 @@
 module TOGOctahedronBrowser
 
 using TOGBroadcastBrowser: BroadcastBrowser
-using TOGOctahedron
+using TOGOctahedron: Octahedron
 # using TOGMoveOctahedron
+using TOGZMQClient
 using TOGZMQClient: observe
-# using TOG: T
+using TOG: ○
+using TOGColor: scalar2rgba
 using LoopOS: @whiletrue
 
+const T = TOGZMQClient.T()
 
 awaken(;octahedron, browser) = BROWSER[] = Browser(
     octahedron,
@@ -29,8 +32,8 @@ browserlooptask(o, browser) = errormonitor(Threads.@spawn begin
             # t̃ = time()
             # dt = t̃ - t
             # t = t̃
-            step!(o)
-            # sleep(1) # todo rm
+            # step!(o)
+            sleep(1) # DEBUG
             ϕ̇ = Base.invokelatest() do
                 observe(o)
                 # ∃̇(o, ω)
@@ -71,7 +74,7 @@ end)
 #     nothing, nothing
 # ))
 function Δ!(ϕ, ϕ̇)
-    δ = Tuple{CartesianIndex{2},Tuple{T,T,T,T}}[]
+    δ = Tuple{CartesianIndex{2},Tuple{eltype(ϕ),eltype(ϕ),eltype(ϕ),eltype(ϕ)}}[]
     for i = CartesianIndices(ϕ̇)
         ϕ[i] == ϕ̇[i] && continue
         ϕ[i] = ϕ̇[i]
