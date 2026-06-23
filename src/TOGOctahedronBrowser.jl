@@ -13,7 +13,7 @@ function awaken(; octahedron, browser)
     BROWSER[] =
         Browser(
             octahedron,
-            browserlooptask(octahedron, browser),
+            browserlooptask(octahedron),
             browser)
 end
 mutable struct Browser
@@ -23,11 +23,11 @@ mutable struct Browser
 end
 const BROWSER = Ref{Browser}()
 const OBSERVE = Ref(true)
-browserlooptask(o, browser) = errormonitor(Threads.@spawn begin
+browserlooptask(octahedron) = errormonitor(Threads.@spawn begin
     # t = time()
-    put!(BroadcastBrowser, JS(o.♯[1], o.♯[2]))
+    put!(BroadcastBrowser, JS(octahedron.♯[1], octahedron.♯[2]))
     # # put!(browser.processor, JS(o.♯[1], o.♯[2]))
-    ϕ = fill(○(first(typeof(o).parameters)), o.♯[1], o.♯[2]), ones(first(typeof(o).parameters), o.♯[1], o.♯[2])
+    ϕ = fill(○(first(typeof(octahedron).parameters)), octahedron.♯[1], octahedron.♯[2]), ones(first(typeof(octahedron).parameters), octahedron.♯[1], octahedron.♯[2])
     @whiletrue begin
                 try
         #     #         # t̃ = time()
@@ -37,14 +37,14 @@ browserlooptask(o, browser) = errormonitor(Threads.@spawn begin
         # sleep(1) # DEBUG
         OBSERVE[] || continue
         ϕ̇ = Base.invokelatest() do
-            observe(o)
+            observe(octahedron)
             # @show "browserlooptask", y
             # ∃̇(o, ω)
         end
         #     #         # unique(ϕ̇)
         δ = Δ!(ϕ, ϕ̇)
         isempty(δ) && continue
-        js = "pixel=" * writeδ(δ, o.♯[2]) * "\n" * SET_PIXELS_JS
+        js = "pixel=" * writeδ(δ, octahedron.♯[2]) * "\n" * SET_PIXELS_JS
         #     @show "length(js)", length(js)
         put!(BroadcastBrowser, js)
                 catch e
