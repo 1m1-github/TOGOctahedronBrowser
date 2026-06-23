@@ -3,8 +3,7 @@ module TOGOctahedronBrowser
 using TOGBroadcastBrowser: BroadcastBrowser
 using TOGOctahedron: Octahedron
 # using TOGMoveOctahedron
-using TOGZMQClient
-using TOGZMQClient: observe
+using TOGObserveClient: observe
 using TOG: ○
 using TOGColor: scalar2rgba
 using LoopOS: @whiletrue
