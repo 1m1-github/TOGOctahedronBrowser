@@ -1,9 +1,8 @@
 module TOGOctahedronBrowser
 
 using TOGBroadcastBrowser: BroadcastBrowser
-using TOGOctahedron: Octahedron
+using TOGOctahedron: Octahedron, ∃̇
 # using TOGMoveOctahedron
-using TOGObserveClient: observe
 using TOG: ○
 using TOGColor: scalar2rgba
 using LoopOS: @whiletrue
@@ -37,11 +36,9 @@ browserlooptask(octahedron) = errormonitor(Threads.@spawn begin
         # sleep(1) # DEBUG
         OBSERVE[] || continue
         ϕ̇ = Base.invokelatest() do
-            observe(octahedron)
-            # @show "browserlooptask", y
-            # ∃̇(o, ω)
+            ∃̇(octahedron)
         end
-        #     #         # unique(ϕ̇)
+        #     #         # unique(ϕ̇) # DEBUG
         δ = Δ!(ϕ, ϕ̇)
         isempty(δ) && continue
         js = "pixel=" * writeδ(δ, octahedron.♯[2]) * "\n" * SET_PIXELS_JS
